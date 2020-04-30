@@ -63,6 +63,8 @@ fileFormatVersion: 2
 guid: {0}
 PluginImporter:
   serializedVersion: 2
+  isExplicitlyReferenced: 1
+  validateReferences: 0
   platformData:]]>
     </UnityMetaFileHeader>
 

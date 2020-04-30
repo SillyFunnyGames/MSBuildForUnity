@@ -461,6 +461,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         private void ScanAndProcessKnownFolders(Dictionary<string, Action<string, Guid>> extensionCallbacks)
         {
             ScanAndProcessFiles(Utilities.AssetPath, extensionCallbacks);
+            ScanAndProcessFiles(Utilities.PackagesPath, extensionCallbacks);
             ScanAndProcessFiles(Utilities.PackageLibraryCachePath, extensionCallbacks);
         }
 
