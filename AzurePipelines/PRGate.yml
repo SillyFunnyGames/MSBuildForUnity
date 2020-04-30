@@ -18,4 +18,4 @@ steps:
 - template: Templates/BuildMSBuildForUnityNuGetBinaries.yml
 - template: Templates/BuildMSBuildForUnityNuGetPackage.yml
 # Commenting out the ability to publish the NuGet packages until we get approval from legal
-- template: Templates/PublishArtifacts.yml
+- template: Templates/PublishNuGetPackages.yml
