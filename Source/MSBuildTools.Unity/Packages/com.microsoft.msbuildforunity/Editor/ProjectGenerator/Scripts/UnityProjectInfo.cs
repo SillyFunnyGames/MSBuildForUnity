@@ -164,6 +164,8 @@ namespace Microsoft.Build.Unity.ProjectGeneration
 
             ScanAndProcessKnownFolders(scanMap);
 
+            ScanAndProcessLocalPackages(scanMap);
+
             if (performCompleteParse)
             {
                 Plugins = new ReadOnlyCollection<PluginAssemblyInfo>(plugins);
@@ -463,6 +465,27 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             ScanAndProcessFiles(Utilities.AssetPath, extensionCallbacks);
             ScanAndProcessFiles(Utilities.PackagesPath, extensionCallbacks);
             ScanAndProcessFiles(Utilities.PackageLibraryCachePath, extensionCallbacks);
+        }
+
+        private void ScanAndProcessLocalPackages(Dictionary<string, Action<string, Guid>> extensionCallbacks)
+        {
+            var manifest = File.ReadAllText(Path.Combine(Utilities.PackagesPath, "manifest.json"));
+            int index;
+            while ((index = manifest.IndexOf("\"file:")) >= 0)
+            {
+                var path = manifest.Substring(index + 6, manifest.IndexOf("\"", index + 6) - index - 6);
+                foreach (var pair in ScanForFiles(path, extensionCallbacks.Keys))
+                {
+                    if (!Utilities.TryGetGuidForAsset(new FileInfo(pair.Value), out Guid guid))
+                    {
+                        Debug.LogWarning($"Skipping processing asset '{pair.Value}' as no meta file was found, or guid parsed.");
+                    }
+                    else
+                    {
+                        extensionCallbacks[pair.Key](pair.Value, guid);
+                    }
+                }
+            }
         }
 
         private void ScanAndProcessFiles(string folder, Dictionary<string, Action<string, Guid>> extensionCallbacks)
