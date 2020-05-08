@@ -474,6 +474,10 @@ namespace Microsoft.Build.Unity.ProjectGeneration
             while ((index = manifest.IndexOf("\"file:", index)) >= 0)
             {
                 var path = manifest.Substring(index + 6, manifest.IndexOf("\"", index + 6) - index - 6);
+                if (!Directory.Exists(path))
+                {
+                    path = Path.Combine(Utilities.PackagesPath, path);
+                }
                 foreach (var pair in ScanForFiles(path, extensionCallbacks.Keys))
                 {
                     if (!Utilities.TryGetGuidForAsset(new FileInfo(pair.Value), out Guid guid))
