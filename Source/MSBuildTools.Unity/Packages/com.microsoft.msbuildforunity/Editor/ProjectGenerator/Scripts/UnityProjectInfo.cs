@@ -470,8 +470,8 @@ namespace Microsoft.Build.Unity.ProjectGeneration
         private void ScanAndProcessLocalPackages(Dictionary<string, Action<string, Guid>> extensionCallbacks)
         {
             var manifest = File.ReadAllText(Path.Combine(Utilities.PackagesPath, "manifest.json"));
-            int index;
-            while ((index = manifest.IndexOf("\"file:")) >= 0)
+            int index = 0;
+            while ((index = manifest.IndexOf("\"file:", index)) >= 0)
             {
                 var path = manifest.Substring(index + 6, manifest.IndexOf("\"", index + 6) - index - 6);
                 foreach (var pair in ScanForFiles(path, extensionCallbacks.Keys))
@@ -485,6 +485,7 @@ namespace Microsoft.Build.Unity.ProjectGeneration
                         extensionCallbacks[pair.Key](pair.Value, guid);
                     }
                 }
+                index += 6;
             }
         }
 
